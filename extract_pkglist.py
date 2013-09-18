@@ -15,7 +15,6 @@ if __name__ == "__main__":
                         action='store_true', default = False)
     args = parser.parse_args()
     
-    full_list = os.popen("yaourt -Qe")
     pkglist_repo = open(args.prefix + "_repo", 'w')
     pkglist_other = open(args.prefix + "_other", 'w')
     if (not args.test):
@@ -27,7 +26,7 @@ if __name__ == "__main__":
     community = 0
     other = 0
     
-    for line in full_list:
+    for line in os.popen("yaourt -Qe"):
         if (not args.quiet):
             print "Copying: '" + line.split()[0].split('/')[1]+"'"
         if (line.split()[0].split('/')[0] == "extra"):
@@ -66,7 +65,6 @@ if __name__ == "__main__":
         print "other:          %5s" % (str(other))
         print "Total packages: %5s" % (str(core + extra + community + multilib + other))
     
-    full_list.close()
     pkglist_repo.close()
     pkglist_other.close()
     if (not args.test):

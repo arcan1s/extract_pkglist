@@ -28,32 +28,32 @@ if __name__ == "__main__":
     
     for line in os.popen("yaourt -Qe"):
         if (not args.quiet):
-            print "Copying: '" + line.split()[0].split('/')[1]+"'"
+            print "Copying: '" + line.split()[0].split('/')[1] + "'"
         if (line.split()[0].split('/')[0] == "extra"):
             extra += 1
-            pkglist_repo.write(line.split()[0].split('/')[1]+"\n")
+            pkglist_repo.write(line.split()[0].split('/')[1] + "\n")
         elif (line.split()[0].split('/')[0] == "core"):
             core += 1
-            pkglist_repo.write(line.split()[0].split('/')[1]+"\n")
+            pkglist_repo.write(line.split()[0].split('/')[1] + "\n")
         elif (line.split()[0].split('/')[0] == "community"):
             community += 1
-            pkglist_repo.write(line.split()[0].split('/')[1]+"\n")
+            pkglist_repo.write(line.split()[0].split('/')[1] + "\n")
         elif (line.split()[0].split('/')[0] == "multilib"):
             multilib += 1
-            pkglist_repo.write(line.split()[0].split('/')[1]+"\n")
+            pkglist_repo.write(line.split()[0].split('/')[1] + "\n")
         else:
             other += 1
             if (args.test):
-                pkglist_other.write(line.split()[0].split('/')[1]+"\n")
+                pkglist_other.write(line.split()[0].split('/')[1] + "\n")
             else:
                 num_lines = sum(1 for testline in 
                                 os.popen("wget --spider -o /dev/stdout https://aur.archlinux.org/packages/" + 
                                          line.split()[0].split('/')[1] + 
                                          " | grep '404 Not Found'"))
                 if (num_lines == 0):
-                    pkglist_other.write(line.split()[0].split('/')[1]+"\n")
+                    pkglist_other.write(line.split()[0].split('/')[1] + "\n")
                 else:
-                    pkglist_nondb.write(line.split()[0].split('/')[1]+"\n")
+                    pkglist_nondb.write(line.split()[0].split('/')[1] + "\n")
     
     if (not args.quiet):
         print "---------------------"

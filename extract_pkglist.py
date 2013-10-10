@@ -20,50 +20,35 @@ if __name__ == "__main__":
     if (not args.test):
         pkglist_nondb = open(args.prefix + "_nondb", 'w')
     
-    extra = 0
-    core = 0
-    multilib = 0
-    community = 0
+    repos = 0
     other = 0
     
-    for line in os.popen("yaourt -Qe"):
+    for line in os.popen("yaourt -Qnq"):
         if (not args.quiet):
-            print "Copying: '" + line.split()[0].split('/')[1] + "'"
-        if (line.split()[0].split('/')[0] == "extra"):
-            extra += 1
-            pkglist_repo.write(line.split()[0].split('/')[1] + "\n")
-        elif (line.split()[0].split('/')[0] == "core"):
-            core += 1
-            pkglist_repo.write(line.split()[0].split('/')[1] + "\n")
-        elif (line.split()[0].split('/')[0] == "community"):
-            community += 1
-            pkglist_repo.write(line.split()[0].split('/')[1] + "\n")
-        elif (line.split()[0].split('/')[0] == "multilib"):
-            multilib += 1
-            pkglist_repo.write(line.split()[0].split('/')[1] + "\n")
+            print "Copying: '" + line[:-1] + "'"
+        repos += 1
+        pkglist_repo.write(line)
+    for line in os.popen("yaourt -Qmq"):
+        if (not args.quiet):
+            print "Copying: '" + line[:-1] + "'"
+        other += 1
+        if (args.test):
+            pkglist_other.write(line)
         else:
-            other += 1
-            if (args.test):
-                pkglist_other.write(line.split()[0].split('/')[1] + "\n")
+            num_lines = sum(1 for testline in 
+                            os.popen("wget --spider -o /dev/stdout https://aur.archlinux.org/packages/" + 
+                            line[:-1] + " | grep '404 Not Found'"))
+            if (num_lines == 0):
+                pkglist_other.write(line)
             else:
-                num_lines = sum(1 for testline in 
-                                os.popen("wget --spider -o /dev/stdout https://aur.archlinux.org/packages/" + 
-                                         line.split()[0].split('/')[1] + 
-                                         " | grep '404 Not Found'"))
-                if (num_lines == 0):
-                    pkglist_other.write(line.split()[0].split('/')[1] + "\n")
-                else:
-                    pkglist_nondb.write(line.split()[0].split('/')[1] + "\n")
+                pkglist_nondb.write(line)
     
     if (not args.quiet):
         print "---------------------"
         print "--------Done!--------"
-        print "Core:           %5s" % (str(core))
-        print "Extra:          %5s" % (str(extra))
-        print "Community:      %5s" % (str(community))
-        print "Multilib:       %5s" % (str(multilib))
-        print "other:          %5s" % (str(other))
-        print "Total packages: %5s" % (str(core + extra + community + multilib + other))
+        print "Repos:          %5s" % (str(repos))
+        print "Other:          %5s" % (str(other))
+        print "Total packages: %5s" % (str(repos + other))
     
     pkglist_repo.close()
     pkglist_other.close()

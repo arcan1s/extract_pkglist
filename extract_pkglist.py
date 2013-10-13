@@ -23,12 +23,12 @@ if __name__ == "__main__":
     repos = 0
     other = 0
     
-    for line in os.popen("yaourt -Qenq"):
+    for line in os.popen("sudo pacman -Qenq"):
         if (not args.quiet):
             print "Copying: '" + line[:-1] + "'"
         repos += 1
         pkglist_repo.write(line)
-    for line in os.popen("yaourt -Qemq"):
+    for line in os.popen("sudo pacman -Qemq"):
         if (not args.quiet):
             print "Copying: '" + line[:-1] + "'"
         other += 1

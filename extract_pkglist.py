@@ -3,22 +3,31 @@
 import argparse, os
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Create bckp files for ArchLinux')
-    parser.add_argument('-p','--prefix', dest='prefix',
+    parser = argparse.ArgumentParser(description = 'Create backup files for ArchLinux')
+    parser.add_argument('-p', '--prefix', dest = 'prefix',
                         help = 'Files prefix. Default is "pkglist"',
-                        action='store', default = 'pkglist')
-    parser.add_argument('-q','--quiet', dest='quiet',
-                        help = 'Do not show output',
-                        action='store_true', default = False)
-    parser.add_argument('-n','--not-test', dest='test',
+                        action = 'store', default = 'pkglist')
+    parser.add_argument('-sr', '--suffix-repo', dest = 'suf_repo',
+                        help = 'Repo database file suffix. Default is "repo"',
+                        action = 'store', default = 'repo')
+    parser.add_argument('-so', '--suffix-other', dest = 'suf_other',
+                        help = 'Other database file suffix. Default is "other"',
+                        action = 'store', default = 'other')
+    parser.add_argument('-sn', '--suffix-nondb', dest = 'suf_nondb',
+                        help = 'Non database file suffix. Default is "nondb"',
+                        action = 'store', default = 'nondb')
+    parser.add_argument('-n', '--not-test', dest = 'test',
                         help = 'Do not test availability of package in AUR',
-                        action='store_true', default = False)
+                        action = 'store_true', default = False)
+    parser.add_argument('-q', '--quiet', dest = 'quiet',
+                        help = 'Do not show output',
+                        action = 'store_true', default = False)
     args = parser.parse_args()
     
-    pkglist_repo = open(args.prefix + "_repo", 'w')
-    pkglist_other = open(args.prefix + "_other", 'w')
+    pkglist_repo = open(args.prefix + "_" + args.suf_repo, 'w')
+    pkglist_other = open(args.prefix + "_" + args.suf_other, 'w')
     if (not args.test):
-        pkglist_nondb = open(args.prefix + "_nondb", 'w')
+        pkglist_nondb = open(args.prefix + "_" + args.suf_nondb, 'w')
     
     repos = 0
     other = 0
